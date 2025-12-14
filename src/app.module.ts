@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { RolesModule } from './roles/roles.module';
+import { PerfilClientesModule } from './perfil-clientes/perfil-clientes.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RolesModule } from './roles/roles.module';
     }),
     UsuariosModule,
     RolesModule,
+    PerfilClientesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
