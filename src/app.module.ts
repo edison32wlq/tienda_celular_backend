@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
       // ssl: { rejectUnauthorized: false },
     }),
     UsuariosModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
