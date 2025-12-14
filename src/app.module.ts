@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { RolesModule } from './roles/roles.module';
 import { PerfilClientesModule } from './perfil-clientes/perfil-clientes.module';
+import { OrdenComprasModule } from './orden-compras/orden-compras.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PerfilClientesModule } from './perfil-clientes/perfil-clientes.module';
     UsuariosModule,
     RolesModule,
     PerfilClientesModule,
+    OrdenComprasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
