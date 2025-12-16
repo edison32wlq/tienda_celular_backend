@@ -15,12 +15,10 @@ export class UsuariosService {
   ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
-    // tu DTO tiene "contrasena", no "password"
     const hashedPassword = await bcrypt.hash(createUsuarioDto.contrasena, 10);
 
     const usuario = this.usuarioRepository.create({
       ...createUsuarioDto,
-      // tu entity tiene "contrasena", no "password"
       contrasena: hashedPassword,
     });
 
@@ -32,12 +30,10 @@ export class UsuariosService {
   }
 
   findOne(id: string) {
-    // tu PK se llama "id_usuario", no "id"
     return this.usuarioRepository.findOne({ where: { id_usuario: id } });
   }
 
   async findByCorreo(correo: string) {
-    // tu campo se llama "correo", no "email"
     return this.usuarioRepository.findOne({ where: { correo } });
   }
 
@@ -47,7 +43,6 @@ export class UsuariosService {
     });
     if (!usuario) return null;
 
-    // tu DTO tiene "contrasena", no "password"
     if (updateUsuarioDto.contrasena) {
       updateUsuarioDto.contrasena = await bcrypt.hash(
         updateUsuarioDto.contrasena,
