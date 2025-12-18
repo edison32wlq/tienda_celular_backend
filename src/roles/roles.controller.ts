@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRolDto } from './dto/create-rol.dto';
 import { UpdateRolDto } from './dto/update-rol.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Rol } from './rol.entity';
 
 @Controller('roles')
 export class RolesController {
@@ -13,8 +15,12 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<Pagination<Rol>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.rolesService.findAll({ page, limit });
   }
 
   @Get(':id')
