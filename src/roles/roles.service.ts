@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Rol } from './rol.entity';
 import { CreateRolDto } from './dto/create-rol.dto';
 import { UpdateRolDto } from './dto/update-rol.dto';
+import { paginate, IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class RolesService {
@@ -17,8 +18,9 @@ export class RolesService {
     return this.rolRepository.save(rol);
   }
 
-  findAll() {
-    return this.rolRepository.find();
+  async findAll(options: IPaginationOptions): Promise<Pagination<Rol>> {
+    const queryBuilder = this.rolRepository.createQueryBuilder('rol');
+    return paginate<Rol>(queryBuilder, options);
   }
 
   findOne(id: string) {

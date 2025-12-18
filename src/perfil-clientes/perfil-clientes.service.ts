@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { PerfilCliente } from './perfilCliente.entity';
 import { CreatePerfilClienteDto } from './dto/create-perfilCliente.dto';
 import { UpdatePerfilClienteDto } from './dto/update-perfilCliente.dto';
+import { paginate, IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
+
 
 @Injectable()
 export class PerfilClientesService {
@@ -17,8 +19,9 @@ export class PerfilClientesService {
     return this.perfilClienteRepository.save(perfilCliente);
   }
 
-  findAll() {
-    return this.perfilClienteRepository.find();
+  async findAll(options: IPaginationOptions): Promise<Pagination<PerfilCliente>> {
+    const queryBuilder = this.perfilClienteRepository.createQueryBuilder('perfilCliente');
+    return paginate<PerfilCliente>(queryBuilder, options);
   }
 
   findOne(id: string) {
