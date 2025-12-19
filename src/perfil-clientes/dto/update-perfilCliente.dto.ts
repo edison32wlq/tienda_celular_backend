@@ -1,19 +1,19 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UpdatePerfilClienteDto {
-  @IsString()
   @IsOptional()
+  @IsUUID()
   id_usuario?: string;
 
-  @IsString()
   @IsOptional()
-  cesula?: string;
+  @IsString()
+  cedula?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   telefono?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   direccion?: string;
 }

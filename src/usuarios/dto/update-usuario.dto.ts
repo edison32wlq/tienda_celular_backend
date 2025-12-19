@@ -1,8 +1,8 @@
-import { IsOptional, IsString, IsEmail } from 'class-validator';
+import { IsOptional, IsString, IsEmail, IsBoolean, MinLength, IsUUID } from 'class-validator';
 
 export class UpdateUsuarioDto {
   @IsOptional()
-  @IsString()
+  @IsUUID()
   id_rol?: string;
 
   @IsOptional()
@@ -11,6 +11,7 @@ export class UpdateUsuarioDto {
 
   @IsOptional()
   @IsString()
+  @MinLength(6)
   contrasena?: string;
 
   @IsOptional()
@@ -26,6 +27,10 @@ export class UpdateUsuarioDto {
   correo?: string;
 
   @IsOptional()
+  @IsBoolean()
+  estado?: boolean;
+
+  @IsOptional()
   @IsString()
-  estado?: string;
+  profile?: string;
 }
