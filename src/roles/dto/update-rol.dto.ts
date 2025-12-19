@@ -1,11 +1,11 @@
 import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateRolDto {
-  @IsString()
   @IsOptional()
-  nombre_rol: string;
+  @IsString()
+  nombre_rol?: string;
 
-  @IsString()
   @IsOptional()
-  descripcion: string;
+  @IsString()
+  descripcion?: string;
 }

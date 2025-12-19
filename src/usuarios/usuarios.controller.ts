@@ -1,40 +1,65 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller, Get, Post, Put, Delete, Body, Param, Query,
+  BadRequestException, NotFoundException, InternalServerErrorException
+} from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { Pagination } from 'nestjs-typeorm-paginate';
 import { Usuario } from './usuario.entity';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { QueryDto } from 'src/common/dto/query.dto';
+import { SuccessResponseDto } from 'src/common/dto/response.dto';
 
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  create(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.usuariosService.create(createUsuarioDto);
+  async create(@Body() dto: CreateUsuarioDto) {
+    const usuario = await this.usuariosService.create(dto);
+    if (!usuario) throw new InternalServerErrorException('Failed to create usuario');
+    return new SuccessResponseDto('Usuario created successfully', usuario);
   }
 
   @Get()
-  findAll(
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
-  ): Promise<Pagination<Usuario>> {
-    limit = limit > 100 ? 100 : limit;
-    return this.usuariosService.findAll({ page, limit });
+  async findAll(
+    @Query() query: QueryDto,
+    @Query('estado') estado?: string,
+  ): Promise<SuccessResponseDto<Pagination<Usuario>>> {
+
+    if (query.limit && query.limit > 100) query.limit = 100;
+
+    if (estado !== undefined && estado !== 'true' && estado !== 'false') {
+      throw new BadRequestException('Invalid value for "estado". Use "true" or "false".');
+    }
+
+    const result = await this.usuariosService.findAll(
+      query,
+      estado === undefined ? undefined : estado === 'true',
+    );
+
+    if (!result) throw new InternalServerErrorException('Could not retrieve usuarios');
+    return new SuccessResponseDto('Usuarios retrieved successfully', result);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usuariosService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const usuario = await this.usuariosService.findOne(id);
+    if (!usuario) throw new NotFoundException('Usuario not found');
+    return new SuccessResponseDto('Usuario retrieved successfully', usuario);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
-    return this.usuariosService.update(id, updateUsuarioDto);
+  async update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
+    const usuario = await this.usuariosService.update(id, dto);
+    if (!usuario) throw new NotFoundException('Usuario not found');
+    return new SuccessResponseDto('Usuario updated successfully', usuario);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usuariosService.remove(id);
+  async remove(@Param('id') id: string) {
+    const usuario = await this.usuariosService.remove(id);
+    if (!usuario) throw new NotFoundException('Usuario not found');
+    return new SuccessResponseDto('Usuario deleted successfully', usuario);
   }
 }

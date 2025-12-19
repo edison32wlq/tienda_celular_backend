@@ -1,18 +1,22 @@
-import { IsString } from 'class-validator';
+import {IsUUID,IsDateString,IsString,IsNumber,IsNotEmpty,
+} from 'class-validator';
 
 export class CreateOrdenCompraDto {
-  @IsString()
+  @IsUUID()
+  @IsNotEmpty()
   id_proveedor: string;
 
-  @IsString()
+  @IsUUID()
+  @IsNotEmpty()
   id_usuario: string;
 
-  @IsString()
+  @IsDateString()
   fecha_emision: Date;
 
   @IsString()
+  @IsNotEmpty()
   estado: string;
 
-  @IsString()
+  @IsNumber()
   total: number;
 }
