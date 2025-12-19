@@ -4,6 +4,11 @@ import { Repository } from 'typeorm';
 import { DetalleFactura } from './detalle_factura.entity';
 import { CreateDetalleFacturaDto } from './dto/create-detalle_factura.dto';
 import { UpdateDetalleFacturaDto } from './dto/update-detalle_factura.dto';
+import {
+  IPaginationOptions,
+  Pagination,
+  paginate,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class DetalleFacturaService {
@@ -24,8 +29,13 @@ export class DetalleFacturaService {
     return this.detalleFacturaRepository.save(detalle);
   }
 
-  findAll() {
-    return this.detalleFacturaRepository.find();
+  async findAll(
+    options: IPaginationOptions,
+  ): Promise<Pagination<DetalleFactura>> {
+    const queryBuilder =
+      this.detalleFacturaRepository.createQueryBuilder('detalle_factura');
+
+    return paginate<DetalleFactura>(queryBuilder, options);
   }
 
   findOne(id: number) {

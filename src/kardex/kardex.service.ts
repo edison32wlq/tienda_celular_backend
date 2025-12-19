@@ -8,6 +8,11 @@ import { Repository } from 'typeorm';
 import { Kardex } from './kardex.entity';
 import { CreateKardexDto } from './dto/create-kardex.dto';
 import { UpdateKardexDto } from './dto/update-kardex.dto';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class KardexService {
@@ -61,8 +66,12 @@ export class KardexService {
     return this.kardexRepository.save(kardex);
   }
 
-  findAll() {
-    return this.kardexRepository.find();
+  async findAll(options: IPaginationOptions): Promise<Pagination<Kardex>> {
+    const queryBuilder = this.kardexRepository
+      .createQueryBuilder('kardex')
+      .orderBy('kardex.fecha_movimiento', 'DESC');
+
+    return paginate<Kardex>(queryBuilder, options);
   }
 
   findOne(id: number) {

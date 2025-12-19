@@ -4,6 +4,11 @@ import { Repository } from 'typeorm';
 import { Factura } from './factura.entity';
 import { CreateFacturaDto } from './dto/create-factura.dto';
 import { UpdateFacturaDto } from './dto/update-factura.dto';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class FacturaService {
@@ -27,8 +32,9 @@ export class FacturaService {
     return this.facturaRepository.save(factura);
   }
 
-  findAll() {
-    return this.facturaRepository.find();
+  async findAll(options: IPaginationOptions): Promise<Pagination<Factura>> {
+    const queryBuilder = this.facturaRepository.createQueryBuilder('factura');
+    return paginate<Factura>(queryBuilder, options);
   }
 
   findOne(id: number) {

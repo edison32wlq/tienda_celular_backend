@@ -6,11 +6,14 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 
 import { FacturaService } from './factura.service';
 import { CreateFacturaDto } from './dto/create-factura.dto';
 import { UpdateFacturaDto } from './dto/update-factura.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Factura } from './factura.entity';
 
 @Controller('factura')
 export class FacturaController {
@@ -22,8 +25,12 @@ export class FacturaController {
   }
 
   @Get()
-  findAll() {
-    return this.facturaService.findAll();
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<Pagination<Factura>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.facturaService.findAll({ page, limit });
   }
 
   @Get(':id')

@@ -6,11 +6,14 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 
 import { KardexService } from './kardex.service';
 import { CreateKardexDto } from './dto/create-kardex.dto';
 import { UpdateKardexDto } from './dto/update-kardex.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Kardex } from './kardex.entity';
 
 @Controller('kardex')
 export class KardexController {
@@ -20,10 +23,13 @@ export class KardexController {
   create(@Body() dto: CreateKardexDto) {
     return this.kardexService.create(dto);
   }
-
   @Get()
-  findAll() {
-    return this.kardexService.findAll();
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<Pagination<Kardex>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.kardexService.findAll({ page, limit });
   }
 
   @Get(':id')
