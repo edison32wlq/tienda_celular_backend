@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { ProductoCarrito } from '../producto_carrito/productoCarrito.entity';
 
 @Entity('celulares')
 export class Celular {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'id_celular' })
   id_celular: number;
 
   @Column({ length: 50 })
@@ -29,7 +30,7 @@ export class Celular {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   costo_compra: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   stock_actual: number;
 
   @Column({ length: 20 })
@@ -37,4 +38,7 @@ export class Celular {
 
   @Column({ type: 'text' })
   descripcion: string;
+
+  @OneToMany(() => ProductoCarrito, (pc) => pc.celular)
+  productosCarrito: ProductoCarrito[];
 }

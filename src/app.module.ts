@@ -10,6 +10,7 @@ import { CelularesModule } from './celulares/celulares.module';
 import { DetalleOrdenCompraModule } from './detalle_orden_compra/detalle-orden-compra.module';
 import { ProductosCarritoModule } from './producto_carrito/productos-carrito.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
+import { AuditLogsModule } from './auditlog/audit-logs.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ProveedoresModule } from './proveedores/proveedores.module';
     DetalleOrdenCompraModule,
     ProductosCarritoModule,
     ProveedoresModule,
+    AuditLogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

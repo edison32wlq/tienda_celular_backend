@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsString } from 'class-validator';
+import { IsInt, IsNumber, IsPositive, IsString } from 'class-validator';
 
 export class CreateCelularDto {
   @IsString()
@@ -19,10 +19,12 @@ export class CreateCelularDto {
   @IsString()
   ram: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
   precio_venta: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
   costo_compra: number;
 
   @IsInt()

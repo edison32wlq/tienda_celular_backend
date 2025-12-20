@@ -1,47 +1,49 @@
-import { IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class UpdateCelularDto {
   @IsString()
   @IsOptional()
-  codigo: string;
+  codigo?: string;
 
   @IsString()
   @IsOptional()
-  marca: string;
+  marca?: string;
 
   @IsString()
   @IsOptional()
-  modelo: string;
+  modelo?: string;
 
   @IsString()
   @IsOptional()
-  color: string;
+  color?: string;
 
   @IsString()
   @IsOptional()
-  almacenamiento: string;
+  almacenamiento?: string;
 
   @IsString()
   @IsOptional()
-  ram: string;
+  ram?: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
   @IsOptional()
-  precio_venta: number;
+  precio_venta?: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
   @IsOptional()
-  costo_compra: number;
+  costo_compra?: number;
 
   @IsInt()
   @IsOptional()
-  stock_actual: number;
+  stock_actual?: number;
 
   @IsString()
   @IsOptional()
-  estado: string;
+  estado?: string;
 
   @IsString()
   @IsOptional()
-  descripcion: string;
+  descripcion?: string;
 }
