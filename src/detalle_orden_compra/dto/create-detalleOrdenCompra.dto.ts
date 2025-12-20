@@ -1,8 +1,8 @@
-import { IsInt, IsNumber } from 'class-validator';
+import { IsUUID, IsInt, IsNumber } from 'class-validator';
 
 export class CreateDetalleOrdenCompraDto {
-  @IsInt()
-  id_orden_compra: number;
+  @IsUUID()
+  id_orden_compra: string;
 
   @IsInt()
   id_celular: number;

@@ -21,4 +21,5 @@ export class PerfilCliente {
 
   @Column()
   direccion: string; 
+  carritos: any;
 }

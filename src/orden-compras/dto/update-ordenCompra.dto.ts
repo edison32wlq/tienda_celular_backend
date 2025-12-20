@@ -1,7 +1,7 @@
 import {IsOptional, IsUUID, IsDateString, IsString, IsArray,ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateDetalleOrdenCompraDto } from '../../detalle_orden_compra/dto/create-detalle-orden-compra.dto';
+import { CreateDetalleOrdenCompraDto } from '../../detalle_orden_compra/dto/create-detalleOrdenCompra.dto';
 
 export class UpdateOrdenCompraDto {
   @IsOptional()

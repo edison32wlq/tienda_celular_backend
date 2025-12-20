@@ -1,23 +1,23 @@
-import { IsInt, IsNumber, IsOptional } from 'class-validator';
+import { IsUUID, IsInt, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateDetalleOrdenCompraDto {
-  @IsInt()
+  @IsUUID()
   @IsOptional()
-  id_orden_compra: number;
+  id_orden_compra?: string;
 
   @IsInt()
   @IsOptional()
-  id_celular: number;
+  id_celular?: number;
 
   @IsInt()
   @IsOptional()
-  cantidad: number;
+  cantidad?: number;
 
   @IsNumber()
   @IsOptional()
-  costo_unitario: number;
+  costo_unitario?: number;
 
   @IsNumber()
   @IsOptional()
-  subtotal: number;
+  subtotal?: number;
 }
