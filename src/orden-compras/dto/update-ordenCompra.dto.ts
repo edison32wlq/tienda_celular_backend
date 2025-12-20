@@ -1,5 +1,7 @@
-import {IsOptional, IsUUID, IsDateString, IsString, IsNumber,
+import {IsOptional, IsUUID, IsDateString, IsString, IsArray,ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateDetalleOrdenCompraDto } from '../../detalle_orden_compra/dto/create-detalle-orden-compra.dto';
 
 export class UpdateOrdenCompraDto {
   @IsOptional()
@@ -12,13 +14,15 @@ export class UpdateOrdenCompraDto {
 
   @IsOptional()
   @IsDateString()
-  fecha_emision?: Date;
+  fecha_emision?: string;
 
   @IsOptional()
   @IsString()
   estado?: string;
 
   @IsOptional()
-  @IsNumber()
-  total?: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDetalleOrdenCompraDto)
+  detalles?: CreateDetalleOrdenCompraDto[];
 }

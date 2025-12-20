@@ -9,6 +9,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { RolesModule } from './roles/roles.module';
 import { PerfilClientesModule } from './perfil-clientes/perfil-clientes.module';
 import { OrdenComprasModule } from './orden-compras/orden-compras.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { OrdenComprasModule } from './orden-compras/orden-compras.module';
     RolesModule,
     PerfilClientesModule,
     OrdenComprasModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
