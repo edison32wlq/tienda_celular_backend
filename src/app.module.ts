@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 import { CarritoModule } from './carrito/carrito.module';
 import { CelularesModule } from './celulares/celulares.module';
@@ -12,12 +13,16 @@ import { ProductosCarritoModule } from './producto_carrito/productos-carrito.mod
 import { ProveedoresModule } from './proveedores/proveedores.module';
 import { AuditLogsModule } from './auditlog/audit-logs.module';
 
+import { UsuariosModule } from './usuarios/usuarios.module';
+import { RolesModule } from './roles/roles.module';
+import { PerfilClientesModule } from './perfil-clientes/perfil-clientes.module';
+import { OrdenComprasModule } from './orden-compras/orden-compras.module';
+import { MailModule } from './mail/mail.module';
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI || ''),
-
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -29,12 +34,17 @@ import { AuditLogsModule } from './auditlog/audit-logs.module';
       synchronize: true,
     }),
 
+    UsuariosModule,
+    RolesModule,
+    PerfilClientesModule,
+    OrdenComprasModule,
     CarritoModule,
     CelularesModule,
     DetalleOrdenCompraModule,
     ProductosCarritoModule,
     ProveedoresModule,
     AuditLogsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
