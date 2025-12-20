@@ -1,5 +1,6 @@
-import {IsUUID,IsDateString,IsString,IsNumber,IsNotEmpty,
-} from 'class-validator';
+import { IsUUID, IsDateString, IsString, IsNotEmpty, IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateDetalleOrdenCompraDto } from '../../detalle_orden_compra/dto/create-detalle-orden-compra.dto';
 
 export class CreateOrdenCompraDto {
   @IsUUID()
@@ -11,12 +12,15 @@ export class CreateOrdenCompraDto {
   id_usuario: string;
 
   @IsDateString()
-  fecha_emision: Date;
+  @IsOptional()
+  fecha_emision?: string;
 
   @IsString()
   @IsNotEmpty()
   estado: string;
 
-  @IsNumber()
-  total: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDetalleOrdenCompraDto)
+  detalles: CreateDetalleOrdenCompraDto[];
 }
