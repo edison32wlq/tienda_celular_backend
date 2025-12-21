@@ -5,6 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { FacturaModule } from './factura/factura.module';
+import { DetalleFacturaModule } from './detalle_factura/detalle_factura.module';
+import { KardexModule } from './kardex/kardex.module';
+import { AuthModule } from './auth/auth.module';
 
 import { CarritoModule } from './carrito/carrito.module';
 import { CelularesModule } from './celulares/celulares.module';
