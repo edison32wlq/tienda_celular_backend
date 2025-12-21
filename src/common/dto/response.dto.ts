@@ -1,5 +1,5 @@
 export class SuccessResponseDto<T = any> {
-  success: true;
+  success: boolean = true;
   message: string;
   data: T;
 
@@ -11,13 +11,12 @@ export class SuccessResponseDto<T = any> {
 }
 
 export class ErrorResponseDto {
-  success: false;
+  success: boolean = false;
   message: string;
   statusCode: number;
-  error?: unknown;
+  error?: any;
 
   constructor(message: string, statusCode = 500, error?: any) {
-    this.success = false;
     this.message = message;
     this.statusCode = statusCode;
     this.error = error;
