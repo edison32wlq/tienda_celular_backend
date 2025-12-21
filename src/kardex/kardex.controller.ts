@@ -1,13 +1,8 @@
 import {
-  Controller,
-  Post as HttpPost,
-  Body,
-  Get,
-  Param,
-  Put,
-  Delete,
-  Query,
+  Controller, Get, Post as HttpPost, Put, Delete, Body, Param, Query,
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { KardexService } from './kardex.service';
 import { CreateKardexDto } from './dto/create-kardex.dto';
@@ -19,6 +14,7 @@ import { Kardex } from './kardex.entity';
 export class KardexController {
   constructor(private readonly kardexService: KardexService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @HttpPost()
   create(@Body() dto: CreateKardexDto) {
     return this.kardexService.create(dto);
@@ -34,21 +30,23 @@ export class KardexController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.kardexService.findOne(+id);
+    return this.kardexService.findOne(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdateKardexDto) {
-    return this.kardexService.update(+id, dto);
+    return this.kardexService.update(id, dto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.kardexService.remove(+id);
+    return this.kardexService.remove(id);
   }
 
   @Get('stock/:id_celular')
   stockActual(@Param('id_celular') id_celular: string) {
-    return this.kardexService.stockActual(+id_celular);
+    return this.kardexService.stockActual(id_celular);
   }
 }

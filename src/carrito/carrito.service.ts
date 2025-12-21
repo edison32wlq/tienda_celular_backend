@@ -16,14 +16,19 @@ export class CarritoService {
   ) {}
 
   async create(dto: CreateCarritoDto): Promise<Carrito | null> {
-    try {
-      const carrito = this.carritoRepository.create(dto);
-      return await this.carritoRepository.save(carrito);
-    } catch (err) {
-      console.error('Error creating carrito:', err);
-      return null;
-    }
+  try {
+    const carrito = this.carritoRepository.create({
+      id_cliente: dto.id_cliente,
+      estado: dto.estado,
+    });
+
+    return await this.carritoRepository.save(carrito);
+  } catch (err) {
+    console.error('Error creating carrito:', err);
+    return null;
   }
+}
+
 
   async findAll(queryDto: QueryDto): Promise<Pagination<Carrito> | null> {
     try {

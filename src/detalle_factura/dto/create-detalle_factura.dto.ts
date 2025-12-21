@@ -1,9 +1,9 @@
-import { IsInt, IsNumber, Min } from 'class-validator';
+import { IsUUID, IsInt, IsNumber, Min, IsNotEmpty } from 'class-validator';
 
 export class CreateDetalleFacturaDto {
-  @IsInt()
-  @Min(1)
-  id_factura: number;
+  @IsUUID()
+  @IsNotEmpty()
+  id_factura: string;
 
   @IsInt()
   @Min(1)

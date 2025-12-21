@@ -22,7 +22,6 @@ export class KardexService {
   ) {}
 
   async create(dto: CreateKardexDto) {
-    // 1) Buscar el último kardex del mismo producto (id_celular)
     const ultimo = await this.kardexRepository.findOne({
       where: { id_celular: dto.id_celular },
       order: { fecha_movimiento: 'DESC' },
@@ -30,7 +29,6 @@ export class KardexService {
 
     const stockAnterior = ultimo ? ultimo.stock_nuevo : 0;
 
-    // 2) Calcular stock_nuevo
     let stockNuevo = stockAnterior;
 
     if (dto.tipo_movimiento === 'entrada') {
@@ -43,17 +41,15 @@ export class KardexService {
       );
     }
 
-    // 3) Evitar stock negativo
     if (stockNuevo < 0) {
       throw new BadRequestException(
         'Stock insuficiente para realizar la salida',
       );
     }
 
-    // 4) Guardar registro kardex
     const kardex = this.kardexRepository.create({
       id_celular: dto.id_celular,
-      fecha_movimiento: dto.fecha_movimiento,
+      fecha_movimiento: new Date(dto.fecha_movimiento),
       tipo_movimiento: dto.tipo_movimiento,
       origen: dto.origen,
       id_documento: dto.id_documento,
@@ -74,11 +70,11 @@ export class KardexService {
     return paginate<Kardex>(queryBuilder, options);
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.kardexRepository.findOne({ where: { id_kardex: id } });
   }
 
-  async update(id: number, dto: UpdateKardexDto) {
+  async update(id: string, dto: UpdateKardexDto) {
     const kardex = await this.kardexRepository.findOne({
       where: { id_kardex: id },
     });
@@ -88,7 +84,7 @@ export class KardexService {
     return this.kardexRepository.save(kardex);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const kardex = await this.kardexRepository.findOne({
       where: { id_kardex: id },
     });
@@ -97,8 +93,7 @@ export class KardexService {
     return this.kardexRepository.remove(kardex);
   }
 
-  // Stock actual por id_celular
-  async stockActual(id_celular: number) {
+  async stockActual(id_celular: string) {
     const ultimo = await this.kardexRepository.findOne({
       where: { id_celular },
       order: { fecha_movimiento: 'DESC' },

@@ -1,7 +1,8 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
 import { DetalleOrdenCompraService } from './detalle-orden-compra.service';
@@ -16,6 +17,7 @@ import { SuccessResponseDto } from 'src/common/dto/response.dto';
 export class DetalleOrdenCompraController {
   constructor(private readonly detalleOrdenCompraService: DetalleOrdenCompraService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() dto: CreateDetalleOrdenCompraDto) {
     const detalle = await this.detalleOrdenCompraService.create(dto);
@@ -40,6 +42,7 @@ export class DetalleOrdenCompraController {
     return new SuccessResponseDto('DetalleOrdenCompra retrieved successfully', detalle);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateDetalleOrdenCompraDto) {
     const detalle = await this.detalleOrdenCompraService.update(id, dto);
@@ -47,6 +50,7 @@ export class DetalleOrdenCompraController {
     return new SuccessResponseDto('DetalleOrdenCompra updated successfully', detalle);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const detalle = await this.detalleOrdenCompraService.remove(id);

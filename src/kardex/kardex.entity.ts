@@ -1,24 +1,33 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Celular } from '../celulares/celular.entity';
 
 @Entity('kardex')
 export class Kardex {
-  @PrimaryGeneratedColumn()
-  id_kardex: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_kardex' })
+  id_kardex: string;
 
-  @Column()
-  id_celular: number;
+  @Column({ type: 'uuid', name: 'id_celular' })
+  id_celular: string;
+
+  @ManyToOne(
+    () => Celular,
+    (celular) => celular.movimientosKardex,
+    { eager: true, onDelete: 'CASCADE' },
+  )
+  @JoinColumn({ name: 'id_celular', referencedColumnName: 'id_celular' })
+  celular: Celular;
 
   @Column({ type: 'timestamp' })
   fecha_movimiento: Date;
 
   @Column({ length: 20 })
-  tipo_movimiento: string; // entrada / salida
+  tipo_movimiento: string;
 
   @Column({ length: 20 })
-  origen: string; // COMPRA / VENTA / AJUSTE
+  origen: string;
 
-  @Column()
-  id_documento: number; // id_orden_compra o id_factura
+  @Column({ type: 'uuid' })
+  id_documento: string;
 
   @Column()
   cantidad: number;

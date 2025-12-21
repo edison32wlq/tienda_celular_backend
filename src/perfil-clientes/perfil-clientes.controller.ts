@@ -1,7 +1,8 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { PerfilClientesService } from './perfil-clientes.service';
 import { CreatePerfilClienteDto } from './dto/create-perfilCliente.dto';
 import { UpdatePerfilClienteDto } from './dto/update-perfilCliente.dto';
@@ -14,6 +15,7 @@ import { SuccessResponseDto } from 'src/common/dto/response.dto';
 export class PerfilClientesController {
   constructor(private readonly service: PerfilClientesService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() dto: CreatePerfilClienteDto) {
     const perfil = await this.service.create(dto);
@@ -39,6 +41,7 @@ export class PerfilClientesController {
     return new SuccessResponseDto('PerfilCliente retrieved successfully', perfil);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatePerfilClienteDto) {
     const perfil = await this.service.update(id, dto);
@@ -46,6 +49,7 @@ export class PerfilClientesController {
     return new SuccessResponseDto('PerfilCliente updated successfully', perfil);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const perfil = await this.service.remove(id);

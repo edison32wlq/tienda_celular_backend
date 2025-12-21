@@ -9,7 +9,7 @@ import {
 export class UpdateKardexDto {
   @IsOptional()
   @IsInt()
-  id_celular?: number;
+  id_celular?: string;
 
   @IsOptional()
   @IsDateString()

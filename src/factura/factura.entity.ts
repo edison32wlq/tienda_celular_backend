@@ -1,21 +1,35 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { PerfilCliente } from '../perfil-clientes/perfilCliente.entity';
+import { Usuario } from '../usuarios/usuario.entity';
+import { DetalleFactura } from '../detalle_factura/detalle_factura.entity';
 
-@Entity('factura')
+@Entity('facturas')
 export class Factura {
-  @PrimaryGeneratedColumn()
-  id_factura: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_factura' })
+  id_factura: string;
 
-  @Column()
+  @Column({ unique: true })
   numero_factura: string;
 
-  @Column()
+  @Column({ type: 'date' })
   fecha_emision: Date;
 
-  @Column()
-  id_cliente: number;
+  @Column({ type: 'uuid', name: 'id_cliente' })
+  id_cliente: string;
 
-  @Column()
-  id_usuario: number;
+  @ManyToOne(() => PerfilCliente, (cliente) => cliente.facturas, { eager: true })
+  @JoinColumn({ name: 'id_cliente', referencedColumnName: 'id_cliente' })
+  cliente: PerfilCliente;
+
+  @Column({ type: 'uuid', name: 'id_usuario' })
+  id_usuario: string;
+
+  @ManyToOne(() => Usuario, (usuario) => usuario.facturas, { eager: true })
+  @JoinColumn({ name: 'id_usuario', referencedColumnName: 'id_usuario' })
+  usuario: Usuario;
+
+  @OneToMany(() => DetalleFactura, (detalle) => detalle.factura, { cascade: true })
+  detalles: DetalleFactura[];
 
   @Column({ length: 30 })
   metodo_pago: string;

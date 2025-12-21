@@ -5,6 +5,7 @@ import {
 import { Rol } from 'src/roles/rol.entity';
 import { PerfilCliente } from '../perfil-clientes/perfilCliente.entity';
 import { OrdenCompra } from '../orden-compras/ordenCompra.entity';
+import { Factura } from '../factura/factura.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -23,6 +24,9 @@ export class Usuario {
 
   @OneToMany(() => OrdenCompra, (orden) => orden.usuario)
   ordenesCompra: OrdenCompra[];
+
+  @OneToMany(() => Factura, (factura) => factura.usuario)
+  facturas: Factura[];
 
   @Column({ unique: true })
   usuario: string;

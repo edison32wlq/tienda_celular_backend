@@ -1,28 +1,26 @@
-import { IsInt, IsNumber, IsString, IsDateString, Min } from 'class-validator';
+import { IsUUID, IsDateString, IsString, IsInt, IsNumber, Min } from 'class-validator';
 
 export class CreateKardexDto {
-  @IsInt()
-  @Min(1)
-  id_celular: number;
+  @IsUUID()
+  id_celular: string;
 
   @IsDateString()
-  fecha_movimiento: Date;
+  fecha_movimiento: string;
 
   @IsString()
-  tipo_movimiento: string; // entrada / salida
+  tipo_movimiento: string;
 
   @IsString()
-  origen: string; // COMPRA / VENTA / AJUSTE
+  origen: string;
 
-  @IsInt()
-  @Min(1)
-  id_documento: number;
+  @IsUUID()
+  id_documento: string;
 
   @IsInt()
   @Min(1)
   cantidad: number;
 
-  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsNumber()
   @Min(0)
   costo_unitario: number;
 }

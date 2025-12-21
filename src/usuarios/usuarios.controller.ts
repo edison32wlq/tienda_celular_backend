@@ -1,7 +1,9 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query,
-  BadRequestException, NotFoundException, InternalServerErrorException
+  NotFoundException, InternalServerErrorException, UseGuards,
+  BadRequestException
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -14,6 +16,7 @@ import { SuccessResponseDto } from 'src/common/dto/response.dto';
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() dto: CreateUsuarioDto) {
     const usuario = await this.usuariosService.create(dto);
@@ -49,6 +52,7 @@ export class UsuariosController {
     return new SuccessResponseDto('Usuario retrieved successfully', usuario);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
     const usuario = await this.usuariosService.update(id, dto);
@@ -56,6 +60,7 @@ export class UsuariosController {
     return new SuccessResponseDto('Usuario updated successfully', usuario);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const usuario = await this.usuariosService.remove(id);

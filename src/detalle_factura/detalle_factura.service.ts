@@ -38,13 +38,13 @@ export class DetalleFacturaService {
     return paginate<DetalleFactura>(queryBuilder, options);
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.detalleFacturaRepository.findOne({
       where: { id_detalle_factura: id },
     });
   }
 
-  async update(id: number, dto: UpdateDetalleFacturaDto) {
+  async update(id: string, dto: UpdateDetalleFacturaDto) {
     const detalle = await this.detalleFacturaRepository.findOne({
       where: { id_detalle_factura: id },
     });
@@ -55,7 +55,7 @@ export class DetalleFacturaService {
     return this.detalleFacturaRepository.save(detalle);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const detalle = await this.detalleFacturaRepository.findOne({
       where: { id_detalle_factura: id },
     });

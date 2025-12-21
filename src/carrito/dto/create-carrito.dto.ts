@@ -1,9 +1,11 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsUUID, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateCarritoDto {
-  @IsInt()
-  id_cliente: number;
+  @IsUUID()
+  @IsNotEmpty()
+  id_cliente: string;
 
   @IsString()
-  estado: string; 
+  @IsNotEmpty()
+  estado: string;
 }

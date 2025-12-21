@@ -17,4 +17,5 @@ export class Rol {
 
   @OneToMany(() => Usuario, (usuario) => usuario.rol)
   usuarios: Usuario[];
+  nombre: null;
 }

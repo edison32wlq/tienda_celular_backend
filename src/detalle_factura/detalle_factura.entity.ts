@@ -1,15 +1,25 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Factura } from '../factura/factura.entity';
+import { Celular } from '../celulares/celular.entity';
 
 @Entity('detalle_factura')
 export class DetalleFactura {
-  @PrimaryGeneratedColumn()
-  id_detalle_factura: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_detalle_factura' })
+  id_detalle_factura: string;
 
-  @Column()
-  id_factura: number;
+  @Column({ type: 'uuid', name: 'id_factura' })
+  id_factura: string;
 
-  @Column()
+  @ManyToOne(() => Factura, (factura) => factura.detalles, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'id_factura', referencedColumnName: 'id_factura' })
+  factura: Factura;
+
+  @Column({ type: 'int', name: 'id_celular' })
   id_celular: number;
+
+  @ManyToOne(() => Celular, (celular) => celular.detallesFactura, { eager: true })
+  @JoinColumn({ name: 'id_celular', referencedColumnName: 'id_celular' })
+  celular: Celular;
 
   @Column()
   cantidad: number;

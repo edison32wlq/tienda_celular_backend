@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Usuario } from '../usuarios/usuario.entity';
+import { Carrito } from '../carrito/carrito.entity';
 
-@Entity('perfil_clientes') 
+@Entity('perfil_clientes')
 export class PerfilCliente {
   @PrimaryGeneratedColumn('uuid', { name: 'id_cliente' })
   id_cliente: string;
@@ -13,6 +14,9 @@ export class PerfilCliente {
   @JoinColumn({ name: 'id_usuario', referencedColumnName: 'id_usuario' })
   usuario: Usuario;
 
+  @OneToMany(() => Carrito, (carrito) => carrito.cliente)
+  carritos: Carrito[];
+
   @Column()
   cedula: string;
 
@@ -20,6 +24,6 @@ export class PerfilCliente {
   telefono: string;
 
   @Column()
-  direccion: string; 
-  carritos: any;
+  direccion: string;
+  facturas: any;
 }

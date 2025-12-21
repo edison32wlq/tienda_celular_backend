@@ -31,9 +31,6 @@ export class CelularesService {
       const query = this.celularRepository.createQueryBuilder('celular');
 
       if (search) {
-        // Campos permitidos para buscar:
-        // codigo, marca, modelo, color, almacenamiento, ram, estado, descripcion,
-        // precio_venta, costo_compra, stock_actual (estos últimos como texto)
         if (searchField) {
           switch (searchField) {
             case 'codigo':
@@ -82,7 +79,7 @@ export class CelularesService {
 
   async findOne(id: string): Promise<Celular | null> {
     try {
-      return await this.celularRepository.findOne({ where: { id_celular: Number(id) } });
+      return await this.celularRepository.findOne({ where: { id_celular: id } });
     } catch (err) {
       console.error('Error finding celular:', err);
       return null;

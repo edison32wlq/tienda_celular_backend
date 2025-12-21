@@ -17,31 +17,32 @@ export class FacturaService {
     private readonly facturaRepository: Repository<Factura>,
   ) {}
 
-  async create(createFacturaDto: CreateFacturaDto) {
-    const factura = this.facturaRepository.create({
-      numero_factura: createFacturaDto.numero_factura,
-      fecha_emision: createFacturaDto.fecha_emision,
-      id_cliente: createFacturaDto.id_cliente,
-      id_usuario: createFacturaDto.id_usuario,
-      metodo_pago: createFacturaDto.metodo_pago,
-      subtotal: createFacturaDto.subtotal,
-      iva: createFacturaDto.iva,
-      total: createFacturaDto.total,
-    });
+  async create(dto: CreateFacturaDto): Promise<Factura> {
+  const factura = this.facturaRepository.create({
+    numero_factura: dto.numero_factura,
+    fecha_emision: new Date(dto.fecha_emision),
+    id_cliente: dto.id_cliente,
+    id_usuario: dto.id_usuario,
+    metodo_pago: dto.metodo_pago,
+    subtotal: dto.subtotal,
+    iva: dto.iva,
+    total: dto.total,
+  });
 
-    return this.facturaRepository.save(factura);
-  }
+  return this.facturaRepository.save(factura);
+}
+
 
   async findAll(options: IPaginationOptions): Promise<Pagination<Factura>> {
     const queryBuilder = this.facturaRepository.createQueryBuilder('factura');
     return paginate<Factura>(queryBuilder, options);
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.facturaRepository.findOne({ where: { id_factura: id } });
   }
 
-  async update(id: number, updateFacturaDto: UpdateFacturaDto) {
+  async update(id: string, updateFacturaDto: UpdateFacturaDto) {
     const factura = await this.facturaRepository.findOne({
       where: { id_factura: id },
     });
@@ -52,7 +53,7 @@ export class FacturaService {
     return this.facturaRepository.save(factura);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const factura = await this.facturaRepository.findOne({
       where: { id_factura: id },
     });

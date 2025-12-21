@@ -1,7 +1,8 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
 import { CarritoService } from './carrito.service';
@@ -16,6 +17,7 @@ import { SuccessResponseDto } from 'src/common/dto/response.dto';
 export class CarritoController {
   constructor(private readonly carritoService: CarritoService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() dto: CreateCarritoDto) {
     const carrito = await this.carritoService.create(dto);
@@ -39,6 +41,7 @@ export class CarritoController {
     return new SuccessResponseDto('Carrito retrieved successfully', carrito);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateCarritoDto) {
     const carrito = await this.carritoService.update(id, dto);
@@ -46,6 +49,7 @@ export class CarritoController {
     return new SuccessResponseDto('Carrito updated successfully', carrito);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const carrito = await this.carritoService.remove(id);

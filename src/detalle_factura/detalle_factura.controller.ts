@@ -1,13 +1,8 @@
 import {
-  Controller,
-  Post as HttpPost,
-  Body,
-  Get,
-  Param,
-  Put,
-  Delete,
-  Query,
+  Controller, Get, Post as HttpPost, Put, Delete, Body, Param, Query,
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { DetalleFacturaService } from './detalle_factura.service';
 import { CreateDetalleFacturaDto } from './dto/create-detalle_factura.dto';
@@ -19,6 +14,7 @@ import { DetalleFactura } from './detalle_factura.entity';
 export class DetalleFacturaController {
   constructor(private readonly detalleFacturaService: DetalleFacturaService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @HttpPost()
   create(@Body() dto: CreateDetalleFacturaDto) {
     return this.detalleFacturaService.create(dto);
@@ -35,16 +31,18 @@ export class DetalleFacturaController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.detalleFacturaService.findOne(+id);
+    return this.detalleFacturaService.findOne(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdateDetalleFacturaDto) {
-    return this.detalleFacturaService.update(+id, dto);
+    return this.detalleFacturaService.update(id, dto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.detalleFacturaService.remove(+id);
+    return this.detalleFacturaService.remove(id);
   }
 }

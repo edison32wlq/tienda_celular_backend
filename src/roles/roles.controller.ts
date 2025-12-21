@@ -1,7 +1,8 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { RolesService } from './roles.service';
 import { CreateRolDto } from './dto/create-rol.dto';
 import { UpdateRolDto } from './dto/update-rol.dto';
@@ -20,7 +21,7 @@ export class RolesController {
     if (!rol) throw new InternalServerErrorException('Failed to create rol');
     return new SuccessResponseDto('Rol created successfully', rol);
   }
-
+ 
   @Get()
   async findAll(@Query() query: QueryDto): Promise<SuccessResponseDto<Pagination<Rol>>> {
     if (query.limit && query.limit > 100) query.limit = 100;
@@ -38,6 +39,7 @@ export class RolesController {
     return new SuccessResponseDto('Rol retrieved successfully', rol);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateRolDto) {
     const rol = await this.rolesService.update(id, dto);
@@ -45,6 +47,7 @@ export class RolesController {
     return new SuccessResponseDto('Rol updated successfully', rol);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const rol = await this.rolesService.remove(id);

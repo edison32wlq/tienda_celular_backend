@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     const payload = {
-      sub: usuario.id_usuario, // estándar JWT
+      sub: usuario.id_usuario, 
       correo: usuario.correo,
       rol: usuario.rol?.nombre ?? null,
     };

@@ -1,19 +1,21 @@
-import { IsString, IsNumber, IsDateString } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsUUID, IsNotEmpty } from 'class-validator';
 
 export class CreateFacturaDto {
   @IsString()
+  @IsNotEmpty()
   numero_factura: string;
 
   @IsDateString()
-  fecha_emision: Date;
+  fecha_emision: string;
 
-  @IsNumber()
-  id_cliente: number;
+  @IsUUID()
+  id_cliente: string; 
 
-  @IsNumber()
-  id_usuario: number;
+  @IsUUID()
+  id_usuario: string; 
 
   @IsString()
+  @IsNotEmpty()
   metodo_pago: string;
 
   @IsNumber()

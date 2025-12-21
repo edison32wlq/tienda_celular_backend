@@ -7,10 +7,10 @@ export class Carrito {
   @PrimaryGeneratedColumn({ name: 'id_carrito' })
   id_carrito: number;
 
-  @Column({ type: 'int', name: 'id_cliente' })
-  id_cliente: number;
+  @Column({ type: 'uuid', name: 'id_cliente' })
+  id_cliente: string;
 
-  @ManyToOne(() => PerfilCliente, (cliente) => cliente.carritos, { eager: true })
+  @ManyToOne(() => PerfilCliente, (cliente) => cliente.carritos, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_cliente', referencedColumnName: 'id_cliente' })
   cliente: PerfilCliente;
 

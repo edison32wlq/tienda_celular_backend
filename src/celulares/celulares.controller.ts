@@ -1,7 +1,8 @@
 import {
   Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException
+  NotFoundException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
 import { CelularesService } from './celulares.service';
@@ -16,6 +17,7 @@ import { SuccessResponseDto } from 'src/common/dto/response.dto';
 export class CelularesController {
   constructor(private readonly celularesService: CelularesService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() dto: CreateCelularDto) {
     const celular = await this.celularesService.create(dto);
@@ -40,6 +42,7 @@ export class CelularesController {
     return new SuccessResponseDto('Celular retrieved successfully', celular);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateCelularDto) {
     const celular = await this.celularesService.update(id, dto);
@@ -47,6 +50,7 @@ export class CelularesController {
     return new SuccessResponseDto('Celular updated successfully', celular);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const celular = await this.celularesService.remove(id);
