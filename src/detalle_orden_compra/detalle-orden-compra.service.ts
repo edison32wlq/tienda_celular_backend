@@ -31,7 +31,6 @@ export class DetalleOrdenCompraService {
       const query = this.detalleOrdenCompraRepository.createQueryBuilder('detalle');
 
       if (search) {
-        // Campos: id_orden_compra, id_celular, cantidad, costo_unitario, subtotal
         if (searchField) {
           switch (searchField) {
             case 'id_orden_compra':

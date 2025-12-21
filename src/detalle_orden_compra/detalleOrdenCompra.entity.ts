@@ -20,8 +20,8 @@ export class DetalleOrdenCompra {
   @JoinColumn({ name: 'id_orden_compra', referencedColumnName: 'id_orden_compra' })
   ordenCompra: OrdenCompra;
 
-  @Column({ type: 'int', name: 'id_celular' })
-  id_celular: number;
+  @Column({ type: 'uuid', name: 'id_celular' })
+  id_celular: string;
 
   @ManyToOne(() => Celular, (celular) => celular.detallesOrdenCompra, { eager: true })
   @JoinColumn({ name: 'id_celular', referencedColumnName: 'id_celular' })

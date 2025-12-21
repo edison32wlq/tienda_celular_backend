@@ -2,10 +2,7 @@ import { IsUUID, IsInt, IsNumber } from 'class-validator';
 
 export class CreateDetalleOrdenCompraDto {
   @IsUUID()
-  id_orden_compra: string;
-
-  @IsInt()
-  id_celular: number;
+  id_celular: string;  
 
   @IsInt()
   cantidad: number;

@@ -3,11 +3,7 @@ import { IsUUID, IsInt, IsNumber, IsOptional } from 'class-validator';
 export class UpdateDetalleOrdenCompraDto {
   @IsUUID()
   @IsOptional()
-  id_orden_compra?: string;
-
-  @IsInt()
-  @IsOptional()
-  id_celular?: number;
+  id_celular?: string;
 
   @IsInt()
   @IsOptional()

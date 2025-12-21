@@ -17,7 +17,32 @@ export class OrdenComprasService {
 
   async create(dto: CreateOrdenCompraDto): Promise<OrdenCompra | null> {
     try {
-      const orden = this.repo.create(dto);
+      const detallesCalculados = (dto.detalles ?? []).map((d) => {
+        const cantidad = Number(d.cantidad);
+        const costoUnitario = Number(d.costo_unitario);
+        const subtotal = Number((cantidad * costoUnitario).toFixed(2));
+
+        return {
+          ...d,
+          cantidad,
+          costo_unitario: costoUnitario,
+          subtotal, 
+        };
+      });
+
+      const total = Number(
+        detallesCalculados.reduce((acc, d) => acc + Number(d.subtotal), 0).toFixed(2),
+      );
+
+      const orden = this.repo.create({
+        id_proveedor: dto.id_proveedor,
+        id_usuario: dto.id_usuario,
+        fecha_emision: dto.fecha_emision,
+        estado: dto.estado,
+        total, 
+        detalles: detallesCalculados as any, 
+      });
+
       return await this.repo.save(orden);
     } catch (err) {
       console.error('Error creating ordenCompra:', err);
@@ -34,7 +59,9 @@ export class OrdenComprasService {
 
       const query = this.repo
         .createQueryBuilder('orden')
-        .leftJoinAndSelect('orden.usuario', 'usuario');
+        .leftJoinAndSelect('orden.usuario', 'usuario')
+        .leftJoinAndSelect('orden.detalles', 'detalles') 
+        .leftJoinAndSelect('detalles.celular', 'celular'); 
 
       if (estado) {
         query.andWhere('orden.estado = :estado', { estado });
@@ -50,10 +77,9 @@ export class OrdenComprasService {
               break;
 
             default:
-              query.andWhere(
-                '(orden.estado ILIKE :search)',
-                { search: `%${search}%` },
-              );
+              query.andWhere('(orden.estado ILIKE :search)', {
+                search: `%${search}%`,
+              });
           }
         } else {
           query.andWhere('orden.estado ILIKE :search', {
@@ -77,7 +103,7 @@ export class OrdenComprasService {
     try {
       return await this.repo.findOne({
         where: { id_orden_compra: id },
-        relations: ['usuario'],
+        relations: ['usuario', 'detalles', 'detalles.celular'],
       });
     } catch (err) {
       console.error('Error finding ordenCompra:', err);
@@ -89,8 +115,25 @@ export class OrdenComprasService {
     try {
       const orden = await this.repo.findOne({
         where: { id_orden_compra: id },
+        relations: ['detalles'],
       });
       if (!orden) return null;
+
+      if ((dto as any).detalles) {
+        const detallesCalculados = ((dto as any).detalles ?? []).map((d: any) => {
+          const cantidad = Number(d.cantidad);
+          const costoUnitario = Number(d.costo_unitario);
+          const subtotal = Number((cantidad * costoUnitario).toFixed(2));
+
+          return { ...d, cantidad, costo_unitario: costoUnitario, subtotal };
+        });
+
+        (dto as any).total = Number(
+          detallesCalculados.reduce((acc: number, d: any) => acc + Number(d.subtotal), 0).toFixed(2),
+        );
+
+        (dto as any).detalles = detallesCalculados;
+      }
 
       Object.assign(orden, dto);
       return await this.repo.save(orden);

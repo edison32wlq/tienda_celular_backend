@@ -1,7 +1,4 @@
-import {IsOptional, IsUUID, IsDateString, IsString, IsArray,ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-import { CreateDetalleOrdenCompraDto } from '../../detalle_orden_compra/dto/create-detalleOrdenCompra.dto';
+import { IsOptional, IsUUID, IsDateString, IsString } from 'class-validator';
 
 export class UpdateOrdenCompraDto {
   @IsOptional()
@@ -19,10 +16,4 @@ export class UpdateOrdenCompraDto {
   @IsOptional()
   @IsString()
   estado?: string;
-
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateDetalleOrdenCompraDto)
-  detalles?: CreateDetalleOrdenCompraDto[];
 }
