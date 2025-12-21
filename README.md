@@ -1,11 +1,11 @@
-# 📱 Backend – Tienda de Celulares (NestJS)
+#  Backend – Tienda de Celulares (NestJS)
 
 Este proyecto es el backend de una tienda de celulares, desarrollado con **NestJS**, usando **PostgreSQL** como base de datos principal y **MongoDB** para algunos módulos específicos.
 
 Este README funciona como una guía paso a paso para crear el proyecto desde cero, configurarlo y luego subirlo a GitHub.
 
 
-## 📖 Descripción del Proyecto
+##  Descripción del Proyecto
 
 El backend permite manejar las operaciones básicas de una tienda de celulares, como:
 
@@ -21,7 +21,7 @@ El backend permite manejar las operaciones básicas de una tienda de celulares, 
 El proyecto está organizado por módulos y sigue la estructura recomendada por NestJS.
 
 
-## 🗂️ Módulos del Proyecto
+##  Módulos del Proyecto
 
 Dentro de `src/` se manejan los siguientes módulos:
 
@@ -43,14 +43,14 @@ Dentro de `src/` se manejan los siguientes módulos:
 - `common`
 
 
-## 🔀 Uso de Bases de Datos
+##  Uso de Bases de Datos
 
-### 🐘 PostgreSQL
+###  PostgreSQL
 
 Se usa para los datos relacionales y transaccionales:
 usuarios, roles, celulares, carrito, órdenes, facturas y kardex.
 
-### 🍃 MongoDB
+###  MongoDB
 
 Se usan dos colecciones en MongoDB:
 
@@ -60,7 +60,7 @@ Se usan dos colecciones en MongoDB:
 MongoDB se usa aquí porque estos datos no requieren relaciones complejas y pueden variar en estructura.
 
 
-## ⚙️ Prerrequisitos
+##  Prerrequisitos
 
 - Node.js (v18 o superior)
 - npm
@@ -70,7 +70,7 @@ MongoDB se usa aquí porque estos datos no requieren relaciones complejas y pued
 - Visual Studio Code (recomendado)
 
 
-## 🚀 Paso 1: Crear un Proyecto NestJS
+##  Paso 1: Crear un Proyecto NestJS
 
 Instalar Nest CLI:
 
@@ -97,7 +97,7 @@ cd <nombre-del-proyecto>
 ```
 
 
-## 📦 Paso 2: Instalar Dependencias
+##  Paso 2: Instalar Dependencias
 
 ### Base de datos (PostgreSQL)
 
@@ -124,7 +124,7 @@ npm install --save-dev @types/bcrypt
 ```
 
 
-## 🔑 Paso 3: Configurar Variables de Entorno
+##  Paso 3: Configurar Variables de Entorno
 
 Crear un archivo `.env` en la raíz del proyecto:
 
@@ -142,7 +142,7 @@ MONGO_URI=mongodb://localhost:27017/<nombre_bd_mongo>
 ```
 
 
-## 🧱 Paso 4: Crear los Módulos del Proyecto
+##  Paso 4: Crear los Módulos del Proyecto
 
 ```bash
 nest g module auth
@@ -209,7 +209,7 @@ nest g module common
 ```
 
 
-## ▶️ Paso 5: Ejecutar el Proyecto
+##  Paso 5: Ejecutar el Proyecto
 
 ```bash
 npm run start:dev
@@ -222,7 +222,7 @@ http://localhost:3000
 ```
 
 
-## 🧪 Prueba Rápida (Auth)
+##  Prueba Rápida (Auth)
 
 ```http
 POST /auth/login
@@ -236,7 +236,7 @@ POST /auth/login
 ```
 
 
-## ☁️ Paso 6: Subir el Proyecto a GitHub
+##  Paso 6: Subir el Proyecto a GitHub
 
 ```bash
 git init
@@ -248,7 +248,7 @@ git push -u origin main
 ```
 
 
-## 📝 Notas Finales
+##  Notas Finales
 
 - PostgreSQL se usa para la lógica principal del negocio.
 - MongoDB se usa solo para `proveedores` y `auditlog`.
