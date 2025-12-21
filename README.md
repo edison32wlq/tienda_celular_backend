@@ -4,7 +4,6 @@ Este proyecto es el backend de una tienda de celulares, desarrollado con **NestJ
 
 Este README funciona como una guía paso a paso para crear el proyecto desde cero, configurarlo y luego subirlo a GitHub.
 
----
 
 ## 📖 Descripción del Proyecto
 
@@ -21,7 +20,6 @@ El backend permite manejar las operaciones básicas de una tienda de celulares, 
 
 El proyecto está organizado por módulos y sigue la estructura recomendada por NestJS.
 
----
 
 ## 🗂️ Módulos del Proyecto
 
@@ -44,7 +42,6 @@ Dentro de `src/` se manejan los siguientes módulos:
 - `proveedores`
 - `common`
 
----
 
 ## 🔀 Uso de Bases de Datos
 
@@ -62,7 +59,6 @@ Se usan dos colecciones en MongoDB:
 
 MongoDB se usa aquí porque estos datos no requieren relaciones complejas y pueden variar en estructura.
 
----
 
 ## ⚙️ Prerrequisitos
 
@@ -73,7 +69,6 @@ MongoDB se usa aquí porque estos datos no requieren relaciones complejas y pued
 - Git
 - Visual Studio Code (recomendado)
 
----
 
 ## 🚀 Paso 1: Crear un Proyecto NestJS
 
@@ -101,7 +96,6 @@ Entrar al proyecto:
 cd <nombre-del-proyecto>
 ```
 
----
 
 ## 📦 Paso 2: Instalar Dependencias
 
@@ -129,7 +123,6 @@ npm install @nestjs/config
 npm install --save-dev @types/bcrypt
 ```
 
----
 
 ## 🔑 Paso 3: Configurar Variables de Entorno
 
@@ -148,7 +141,6 @@ JWT_EXPIRES_IN=3600s
 MONGO_URI=mongodb://localhost:27017/<nombre_bd_mongo>
 ```
 
----
 
 ## 🧱 Paso 4: Crear los Módulos del Proyecto
 
@@ -216,7 +208,6 @@ nest g service auditlog --no-spec
 nest g module common
 ```
 
----
 
 ## ▶️ Paso 5: Ejecutar el Proyecto
 
@@ -230,7 +221,6 @@ El proyecto se ejecuta por defecto en:
 http://localhost:3000
 ```
 
----
 
 ## 🧪 Prueba Rápida (Auth)
 
@@ -245,7 +235,6 @@ POST /auth/login
 }
 ```
 
----
 
 ## ☁️ Paso 6: Subir el Proyecto a GitHub
 
@@ -258,7 +247,6 @@ git remote add origin https://github.com/<tu-usuario>/<tu-repo>.git
 git push -u origin main
 ```
 
----
 
 ## 📝 Notas Finales
 
