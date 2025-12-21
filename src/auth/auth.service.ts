@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
 import { CreateUsuarioDto } from 'src/usuarios/dto/create-usuario.dto';
+import { Usuario } from 'src/usuarios/usuario.entity'; 
 
 @Injectable()
 export class AuthService {
@@ -12,44 +13,49 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(loginDto: LoginDto) {
-    const usuario = await this.usuariosService.findByCorreo(loginDto.correo);
+  async login(loginDto: LoginDto): Promise<string | null> {
+    try {
+      const usuario: Usuario | null = await this.usuariosService.findByCorreo(
+        loginDto.correo,
+      );
+      if (!usuario) return null;
 
-    if (!usuario) throw new UnauthorizedException('Credenciales inválidas');
+      const isValid = await bcrypt.compare(
+        loginDto.contrasena,
+        usuario.contrasena,
+      );
+      if (!isValid) return null;
 
-    const passwordOk = await bcrypt.compare(
-      loginDto.contrasena,
-      usuario.contrasena,
-    );
+      const payload = {
+        id: usuario.id_usuario, // igual estilo que el ejemplo (id)
+        correo: usuario.correo,
+        rol: usuario.rol?.nombre ?? null,
+      };
 
-    if (!passwordOk) {
-      throw new UnauthorizedException('Credenciales inválidas');
+      return this.jwtService.sign(payload);
+    } catch (err) {
+      console.error('Unexpected login error:', err);
+      return null;
     }
-
-    const payload = {
-      sub: usuario.id_usuario, 
-      correo: usuario.correo,
-      rol: usuario.rol?.nombre ?? null,
-    };
-
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 
-  async register(createUsuarioDto: CreateUsuarioDto) {
-    const usuario = await this.usuariosService.create(createUsuarioDto);
-    if (!usuario)
-      throw new UnauthorizedException('No se pudo crear el usuario');
+  async register(createUsuarioDto: CreateUsuarioDto): Promise<string | null> {
+    try {
+      const usuario: Usuario | null = await this.usuariosService.create(
+        createUsuarioDto,
+      );
+      if (!usuario) return null;
 
-    const payload = {
-      sub: usuario.id_usuario,
-      correo: usuario.correo,
-      rol: usuario.rol?.nombre ?? null,
-    };
+      const payload = {
+        id: usuario.id_usuario,
+        correo: usuario.correo,
+        rol: usuario.rol?.nombre ?? null,
+      };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+      return this.jwtService.sign(payload);
+    } catch (err) {
+      console.error('Unexpected register error:', err);
+      return null;
+    }
   }
 }
