@@ -1,27 +1,27 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProveedorDto {
-  @IsString()
   @IsOptional()
-  nombre: string;
+  @IsString()
+  nombre?: string;
 
-  @IsString()
   @IsOptional()
-  ruc: string;
+  @IsString()
+  ruc?: string;
 
-  @IsString()
   @IsOptional()
-  telefono: string;
+  @IsString()
+  telefono?: string;
 
-  @IsString()
   @IsOptional()
-  correo: string;
+  @IsEmail()
+  correo?: string;
 
-  @IsString()
   @IsOptional()
-  direccion: string;
+  @IsString()
+  direccion?: string;
 
-  @IsString()
   @IsOptional()
-  contacto: string;
+  @IsString()
+  contacto?: string;
 }

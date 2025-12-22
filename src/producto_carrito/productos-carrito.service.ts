@@ -70,7 +70,7 @@ export class ProductosCarritoService {
   async findOne(id: string): Promise<ProductoCarrito | null> {
     try {
       return await this.productoCarritoRepository.findOne({
-        where: { id_producto_carrito: Number(id) },
+        where: { id_producto_carrito: id },
       });
     } catch (err) {
       console.error('Error finding producto_carrito:', err);

@@ -4,18 +4,18 @@ import { Celular } from '../celulares/celular.entity';
 
 @Entity('productos_carrito')
 export class ProductoCarrito {
-  @PrimaryGeneratedColumn({ name: 'id_producto_carrito' })
-  id_producto_carrito: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_producto_carrito' })
+  id_producto_carrito: string;
 
-  @Column({ type: 'int', name: 'id_carrito' })
-  id_carrito: number;
+  @Column({ type: 'uuid', name: 'id_carrito' })
+  id_carrito: string;
 
   @ManyToOne(() => Carrito, (carrito) => carrito.productos, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_carrito' })
   carrito: Carrito;
 
-  @Column({ type: 'int', name: 'id_celular' })
-  id_celular: number;
+  @Column({ type: 'uuid', name: 'id_celular' })
+  id_celular: string;
 
   @ManyToOne(() => Celular, (celular) => celular.productosCarrito, { eager: true })
   @JoinColumn({ name: 'id_celular', referencedColumnName: 'id_celular' })

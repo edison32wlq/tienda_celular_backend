@@ -10,8 +10,8 @@ import { Celular } from '../celulares/celular.entity';
 
 @Entity('detalle_orden_compra')
 export class DetalleOrdenCompra {
-  @PrimaryGeneratedColumn({ name: 'id_detalle_oc' })
-  id_detalle_oc: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_detalle_oc' })
+  id_detalle_oc: string;
 
   @Column({ type: 'uuid', name: 'id_orden_compra' })
   id_orden_compra: string;
