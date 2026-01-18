@@ -71,7 +71,7 @@ export class CarritoService {
 
   async findOne(id: string): Promise<Carrito | null> {
     try {
-      return await this.carritoRepository.findOne({ where: { id_carrito: Number(id) } });
+      return await this.carritoRepository.findOne({ where: { id_carrito: id } });
     } catch (err) {
       console.error('Error finding carrito:', err);
       return null;

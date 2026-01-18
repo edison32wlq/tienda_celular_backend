@@ -40,13 +40,17 @@ export class ProveedoresService {
     }
   }
 
+  // ✅ CORREGIDO: no pisa campos requeridos con undefined
   async update(id: string, dto: UpdateProveedorDto): Promise<Proveedor | null> {
     try {
-      const proveedor = await this.proveedorModel.findById(id);
-      if (!proveedor) return null;
+      const updated = await this.proveedorModel.findByIdAndUpdate(
+        id,
+        { $set: dto }, // solo actualiza lo que envías
+        { new: true, runValidators: true }, // devuelve actualizado y valida
+      );
 
-      Object.assign(proveedor, dto);
-      return await proveedor.save();
+      if (!updated) return null;
+      return updated;
     } catch (err) {
       console.error('Error actualizando proveedor:', err);
       return null;

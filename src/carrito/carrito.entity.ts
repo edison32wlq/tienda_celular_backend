@@ -4,8 +4,9 @@ import { ProductoCarrito } from '../producto_carrito/productoCarrito.entity';
 
 @Entity('carrito')
 export class Carrito {
-  @PrimaryGeneratedColumn({ name: 'id_carrito' })
-  id_carrito: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_carrito' })
+id_carrito: string;
+
 
   @Column({ type: 'uuid', name: 'id_cliente' })
   id_cliente: string;

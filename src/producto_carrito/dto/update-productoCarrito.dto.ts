@@ -1,13 +1,13 @@
-import { IsInt, IsNumber, IsOptional } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsUUID } from 'class-validator';
 
 export class UpdateProductoCarritoDto {
-  @IsInt()
+  @IsUUID()
   @IsOptional()
-  id_carrito: number;
+  id_carrito: string;
 
-  @IsInt()
-  @IsOptional()
-  id_celular: number;
+  @IsUUID()
+    @IsOptional()
+    id_celular?: string;
 
   @IsInt()
   @IsOptional()

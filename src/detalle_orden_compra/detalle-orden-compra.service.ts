@@ -70,7 +70,7 @@ export class DetalleOrdenCompraService {
   async findOne(id: string): Promise<DetalleOrdenCompra | null> {
     try {
       return await this.detalleOrdenCompraRepository.findOne({
-        where: { id_detalle_oc: Number(id) },
+        where: { id_detalle_oc: id },
       });
     } catch (err) {
       console.error('Error finding detalle_orden_compra:', err);
