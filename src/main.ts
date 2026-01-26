@@ -5,6 +5,20 @@ import { GlobalHttpExceptionFilter } from './common/filters/http-exception.filte
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // ✅ CORS (ajusta origins)
+  app.enableCors({
+    origin: [
+      'http://localhost:5173', // Vite
+      'http://localhost:3000', // si tu front usa este
+      'https://higuera-posts-ui.desarrollo-software.xyz',
+      'http://cell-shop.desarrollo-software.xyz/',
+
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // si usas cookies/sesión
+  });
+  
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );

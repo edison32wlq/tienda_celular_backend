@@ -1,9 +1,9 @@
-import { IsUUID, IsDateString, IsString, IsNotEmpty, IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { IsDateString, IsString, IsNotEmpty, IsArray, ValidateNested, IsOptional, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateDetalleOrdenCompraDto } from '../../detalle_orden_compra/dto/create-detalleOrdenCompra.dto';
 
 export class CreateOrdenCompraDto {
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   id_proveedor: string;
 

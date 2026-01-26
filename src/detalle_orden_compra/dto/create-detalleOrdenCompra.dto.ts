@@ -1,9 +1,6 @@
-import { IsUUID, IsInt, IsNumber } from 'class-validator';
+import { IsUUID, IsInt, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateDetalleOrdenCompraDto {
-  @IsUUID()
-  id_orden_compra: string;
-  
   @IsUUID()
   id_celular: string;
 
@@ -13,6 +10,7 @@ export class CreateDetalleOrdenCompraDto {
   @IsNumber()
   costo_unitario: number;
 
+  @IsOptional()
   @IsNumber()
-  subtotal: number;
+  subtotal?: number;
 }

@@ -1,18 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 import { OrdenCompra } from './ordenCompra.entity';
 import { CreateOrdenCompraDto } from './dto/create-ordenCompra.dto';
 import { UpdateOrdenCompraDto } from './dto/update-ordenCompra.dto';
 import { QueryDto } from 'src/common/dto/query.dto';
+import { Celular } from 'src/celulares/celular.entity';
 
 @Injectable()
 export class OrdenComprasService {
   constructor(
     @InjectRepository(OrdenCompra)
     private readonly repo: Repository<OrdenCompra>,
+    private readonly dataSource: DataSource, // ✅ INYECTADO
   ) {}
 
   async create(dto: CreateOrdenCompraDto): Promise<OrdenCompra | null> {
@@ -26,7 +28,7 @@ export class OrdenComprasService {
           ...d,
           cantidad,
           costo_unitario: costoUnitario,
-          subtotal, 
+          subtotal,
         };
       });
 
@@ -39,8 +41,8 @@ export class OrdenComprasService {
         id_usuario: dto.id_usuario,
         fecha_emision: dto.fecha_emision,
         estado: dto.estado,
-        total, 
-        detalles: detallesCalculados as any, 
+        total,
+        detalles: detallesCalculados as any,
       });
 
       return await this.repo.save(orden);
@@ -50,41 +52,23 @@ export class OrdenComprasService {
     }
   }
 
-  async findAll(
-    queryDto: QueryDto,
-    estado?: string,
-  ): Promise<Pagination<OrdenCompra> | null> {
+  async findAll(queryDto: QueryDto, estado?: string): Promise<Pagination<OrdenCompra> | null> {
     try {
       const { page, limit, search, searchField, sort, order } = queryDto;
 
       const query = this.repo
         .createQueryBuilder('orden')
         .leftJoinAndSelect('orden.usuario', 'usuario')
-        .leftJoinAndSelect('orden.detalles', 'detalles') 
-        .leftJoinAndSelect('detalles.celular', 'celular'); 
+        .leftJoinAndSelect('orden.detalles', 'detalles')
+        .leftJoinAndSelect('detalles.celular', 'celular');
 
-      if (estado) {
-        query.andWhere('orden.estado = :estado', { estado });
-      }
+      if (estado) query.andWhere('orden.estado = :estado', { estado });
 
       if (search) {
-        if (searchField) {
-          switch (searchField) {
-            case 'estado':
-              query.andWhere('orden.estado ILIKE :search', {
-                search: `%${search}%`,
-              });
-              break;
-
-            default:
-              query.andWhere('(orden.estado ILIKE :search)', {
-                search: `%${search}%`,
-              });
-          }
+        if (searchField === 'estado') {
+          query.andWhere('orden.estado ILIKE :search', { search: `%${search}%` });
         } else {
-          query.andWhere('orden.estado ILIKE :search', {
-            search: `%${search}%`,
-          });
+          query.andWhere('orden.estado ILIKE :search', { search: `%${search}%` });
         }
       }
 
@@ -124,7 +108,6 @@ export class OrdenComprasService {
           const cantidad = Number(d.cantidad);
           const costoUnitario = Number(d.costo_unitario);
           const subtotal = Number((cantidad * costoUnitario).toFixed(2));
-
           return { ...d, cantidad, costo_unitario: costoUnitario, subtotal };
         });
 
@@ -153,5 +136,56 @@ export class OrdenComprasService {
       console.error('Error deleting ordenCompra:', err);
       return null;
     }
+  }
+
+  // ✅ CONFIRMAR: solo EMITIDA -> suma stock -> RECIBIDA
+  async confirmar(id: string): Promise<OrdenCompra> {
+    return await this.dataSource.transaction(async (manager) => {
+      const ocRepo = manager.getRepository(OrdenCompra);
+      const celRepo = manager.getRepository(Celular);
+
+      const orden = await ocRepo.findOne({
+        where: { id_orden_compra: id },
+        relations: ['detalles'],
+      });
+
+      if (!orden) throw new NotFoundException('OrdenCompra not found');
+      if (orden.estado !== 'EMITIDA') {
+        throw new BadRequestException('Solo se puede confirmar una orden en estado EMITIDA');
+      }
+
+      for (const d of orden.detalles ?? []) {
+        const result = await celRepo.increment(
+          { id_celular: d.id_celular },
+          'stock_actual',
+          Number(d.cantidad),
+        );
+
+        // ✅ si no encontró celular
+        if (!result.affected) {
+          throw new NotFoundException(`Celular no encontrado: ${d.id_celular}`);
+        }
+      }
+
+      orden.estado = 'RECIBIDA';
+      return await ocRepo.save(orden);
+    });
+  }
+
+  // ✅ ANULAR: solo EMITIDA -> ANULADA (no suma stock)
+  async anular(id: string): Promise<OrdenCompra> {
+    return await this.dataSource.transaction(async (manager) => {
+      const ocRepo = manager.getRepository(OrdenCompra);
+
+      const orden = await ocRepo.findOne({ where: { id_orden_compra: id } });
+
+      if (!orden) throw new NotFoundException('OrdenCompra not found');
+      if (orden.estado !== 'EMITIDA') {
+        throw new BadRequestException('Solo se puede anular una orden en estado EMITIDA');
+      }
+
+      orden.estado = 'ANULADA';
+      return await ocRepo.save(orden);
+    });
   }
 }

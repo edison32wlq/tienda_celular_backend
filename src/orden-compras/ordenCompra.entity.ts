@@ -8,7 +8,7 @@ export class OrdenCompra {
   @PrimaryGeneratedColumn('uuid')
   id_orden_compra: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'text' })
   id_proveedor: string;
 
   @Column({ type: 'uuid', name: 'id_usuario' })
