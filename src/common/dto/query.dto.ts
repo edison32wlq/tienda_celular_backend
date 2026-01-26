@@ -2,11 +2,13 @@ import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class QueryDto {
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   page: number = 1;
 
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
@@ -27,4 +29,8 @@ export class QueryDto {
   @IsOptional()
   @IsString()
   order?: 'ASC' | 'DESC';
+
+  @IsOptional()
+  @IsString()
+  estado?: string;
 }

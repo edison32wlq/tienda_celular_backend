@@ -1,6 +1,16 @@
 import {
-  Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException, UseGuards
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  NotFoundException,
+  InternalServerErrorException,
+  UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { OrdenComprasService } from './orden-compras.service';
@@ -20,7 +30,6 @@ export class OrdenComprasController {
   async create(@Body() dto: CreateOrdenCompraDto) {
     const orden = await this.service.create(dto);
     if (!orden) throw new InternalServerErrorException('Failed to create ordenCompra');
-
     return new SuccessResponseDto('OrdenCompra created successfully', orden);
   }
 
@@ -29,7 +38,6 @@ export class OrdenComprasController {
     @Query() query: QueryDto,
     @Query('estado') estado?: string,
   ): Promise<SuccessResponseDto<Pagination<OrdenCompra>>> {
-
     if (query.limit && query.limit > 100) query.limit = 100;
 
     const result = await this.service.findAll(query, estado);
@@ -42,7 +50,6 @@ export class OrdenComprasController {
   async findOne(@Param('id') id: string) {
     const orden = await this.service.findOne(id);
     if (!orden) throw new NotFoundException('OrdenCompra not found');
-
     return new SuccessResponseDto('OrdenCompra retrieved successfully', orden);
   }
 
@@ -51,7 +58,6 @@ export class OrdenComprasController {
   async update(@Param('id') id: string, @Body() dto: UpdateOrdenCompraDto) {
     const orden = await this.service.update(id, dto);
     if (!orden) throw new NotFoundException('OrdenCompra not found');
-
     return new SuccessResponseDto('OrdenCompra updated successfully', orden);
   }
 
@@ -60,7 +66,22 @@ export class OrdenComprasController {
   async remove(@Param('id') id: string) {
     const orden = await this.service.remove(id);
     if (!orden) throw new NotFoundException('OrdenCompra not found');
-
     return new SuccessResponseDto('OrdenCompra deleted successfully', orden);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':id/confirmar')
+  async confirmar(@Param('id') id: string) {
+    const orden = await this.service.confirmar(id);
+    if (!orden) throw new NotFoundException('OrdenCompra not found');
+    return new SuccessResponseDto('Orden confirmada (stock actualizado)', orden);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':id/anular')
+  async anular(@Param('id') id: string) {
+    const orden = await this.service.anular(id);
+    if (!orden) throw new NotFoundException('OrdenCompra not found');
+    return new SuccessResponseDto('Orden anulada', orden);
   }
 }

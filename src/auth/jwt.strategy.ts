@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 interface JwtPayload {
-  sub: string;
+  id: string;      // ✅ tu token trae "id"
   correo: string;
   rol?: string;
 }
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   validate(payload: JwtPayload) {
     return {
-      id_usuario: payload.sub,
+      id_usuario: payload.id,      // ✅ aquí también "id"
       correo: payload.correo,
       rol: payload.rol,
     };

@@ -29,7 +29,7 @@ export class AuthService {
       const payload = {
         id: usuario.id_usuario, // igual estilo que el ejemplo (id)
         correo: usuario.correo,
-        rol: usuario.rol?.nombre ?? null,
+        rol: usuario.rol?.nombre_rol ?? null,
       };
 
       return this.jwtService.sign(payload);
@@ -49,7 +49,7 @@ export class AuthService {
       const payload = {
         id: usuario.id_usuario,
         correo: usuario.correo,
-        rol: usuario.rol?.nombre ?? null,
+        rol: usuario.rol?.nombre_rol ?? null,
       };
 
       return this.jwtService.sign(payload);

@@ -2,7 +2,7 @@ import { IsOptional, IsUUID, IsDateString, IsString } from 'class-validator';
 
 export class UpdateOrdenCompraDto {
   @IsOptional()
-  @IsUUID()
+  @IsString()
   id_proveedor?: string;
 
   @IsOptional()
