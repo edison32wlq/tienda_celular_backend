@@ -5,9 +5,9 @@ export class CreateDetalleFacturaDto {
   @IsNotEmpty()
   id_factura: string;
 
-  @IsInt()
-  @Min(1)
-  id_celular: number;
+  @IsUUID()
+  @IsNotEmpty()
+  id_celular: string;
 
   @IsInt()
   @Min(1)

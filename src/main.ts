@@ -11,7 +11,7 @@ async function bootstrap() {
       'http://localhost:5173', // Vite
       'http://localhost:3000', // si tu front usa este
       'https://higuera-posts-ui.desarrollo-software.xyz',
-      'http://cell-shop.desarrollo-software.xyz/',
+      'https://cell-shop.desarrollo-software.xyz',
 
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
