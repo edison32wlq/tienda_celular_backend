@@ -14,8 +14,8 @@ export class DetalleFactura {
   @JoinColumn({ name: 'id_factura', referencedColumnName: 'id_factura' })
   factura: Factura;
 
-  @Column({ type: 'int', name: 'id_celular' })
-  id_celular: number;
+  @Column({ type: 'uuid', name: 'id_celular' })
+  id_celular: string;
 
   @ManyToOne(() => Celular, (celular) => celular.detallesFactura, { eager: true })
   @JoinColumn({ name: 'id_celular', referencedColumnName: 'id_celular' })

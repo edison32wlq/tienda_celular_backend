@@ -42,6 +42,15 @@ export class Celular {
   @Column({ type: 'text' })
   descripcion: string;
 
+  @Column({ type: 'bytea', nullable: true, select: false })
+  imagen_data?: Buffer;
+
+  @Column({ type: 'text', nullable: true })
+  imagen_mime?: string;
+
+  @Column({ type: 'text', nullable: true })
+  imagen_url?: string;
+
   @OneToMany(() => ProductoCarrito, (pc) => pc.celular)
   productosCarrito: ProductoCarrito[];
 

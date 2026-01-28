@@ -44,4 +44,5 @@ export class FacturaController {
   remove(@Param('id') id: string) {
     return this.facturaService.remove(id);
   }
+  
 }
