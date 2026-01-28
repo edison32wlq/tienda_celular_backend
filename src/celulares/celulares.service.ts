@@ -99,6 +99,62 @@ export class CelularesService {
     }
   }
 
+  async updateWithImage(
+    id: string,
+    dto: UpdateCelularDto,
+    file?: Express.Multer.File,
+  ): Promise<Celular | null> {
+    try {
+      const celular = await this.findOne(id);
+      if (!celular) return null;
+
+      Object.assign(celular, dto);
+
+      if (file) {
+        celular.imagen_data = file.buffer;
+        celular.imagen_mime = file.mimetype;
+        celular.imagen_url = `/celulares/${id}/imagen`;
+      }
+
+      return await this.celularRepository.save(celular);
+    } catch (err) {
+      console.error('Error updating celular with image:', err);
+      return null;
+    }
+  }
+
+  async updateImage(id: string, file: Express.Multer.File): Promise<Celular | null> {
+    try {
+      const celular = await this.findOne(id);
+      if (!celular) return null;
+
+      celular.imagen_data = file.buffer;
+      celular.imagen_mime = file.mimetype;
+      celular.imagen_url = `/celulares/${id}/imagen`;
+      await this.celularRepository.save(celular);
+
+      return await this.findOne(id);
+    } catch (err) {
+      console.error('Error updating celular image:', err);
+      return null;
+    }
+  }
+
+  async getImage(id: string): Promise<{ data: Buffer; mime: string | null } | null> {
+    try {
+      const celular = await this.celularRepository.findOne({
+        where: { id_celular: id },
+        select: ['id_celular', 'imagen_data', 'imagen_mime'],
+      });
+
+      if (!celular?.imagen_data) return null;
+      return { data: celular.imagen_data, mime: celular.imagen_mime ?? null };
+    } catch (err) {
+      console.error('Error retrieving celular image:', err);
+      return null;
+    }
+  }
+
   async remove(id: string): Promise<Celular | null> {
     try {
       const celular = await this.findOne(id);
