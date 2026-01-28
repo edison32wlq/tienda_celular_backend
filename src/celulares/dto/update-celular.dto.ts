@@ -46,4 +46,8 @@ export class UpdateCelularDto {
   @IsString()
   @IsOptional()
   descripcion?: string;
+
+  @IsString()
+  @IsOptional()
+  imagen_url?: string;
 }
