@@ -1,4 +1,10 @@
-import { IsInt, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class UpdateCelularDto {
   @IsString()
@@ -50,4 +56,12 @@ export class UpdateCelularDto {
   @IsString()
   @IsOptional()
   imagen_url?: string;
+
+  @IsString()
+  @IsOptional()
+  imagen_data?: Buffer;
+
+  @IsString()
+  @IsOptional()
+  imagen_mime?: string;
 }

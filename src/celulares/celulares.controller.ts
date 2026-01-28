@@ -1,7 +1,21 @@
 import {
-  Controller, Get, Post, Put, Delete, Body, Param, Query,
-  NotFoundException, InternalServerErrorException, UseGuards, UseInterceptors,
-  UploadedFile, BadRequestException, Res,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  NotFoundException,
+  InternalServerErrorException,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
+  Res,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -17,8 +31,7 @@ import { Celular } from './celular.entity';
 import { QueryDto } from 'src/common/dto/query.dto';
 import { SuccessResponseDto } from 'src/common/dto/response.dto';
 
-const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
+const MAX_IMAGE_SIZE_BYTES = 20 * 1024 * 1024;
 
 @Controller('celulares')
 export class CelularesController {
@@ -28,16 +41,20 @@ export class CelularesController {
   @Post()
   async create(@Body() dto: CreateCelularDto) {
     const celular = await this.celularesService.create(dto);
-    if (!celular) throw new InternalServerErrorException('Failed to create celular');
+    if (!celular)
+      throw new InternalServerErrorException('Failed to create celular');
     return new SuccessResponseDto('Celular created successfully', celular);
   }
 
   @Get()
-  async findAll(@Query() query: QueryDto): Promise<SuccessResponseDto<Pagination<Celular>>> {
+  async findAll(
+    @Query() query: QueryDto,
+  ): Promise<SuccessResponseDto<Pagination<Celular>>> {
     if (query.limit && query.limit > 100) query.limit = 100;
 
     const result = await this.celularesService.findAll(query);
-    if (!result) throw new InternalServerErrorException('Could not retrieve celulares');
+    if (!result)
+      throw new InternalServerErrorException('Could not retrieve celulares');
 
     return new SuccessResponseDto('Celulares retrieved successfully', result);
   }
@@ -60,8 +77,34 @@ export class CelularesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  async update(@Param('id') id: string, @Body() dto: UpdateCelularDto) {
-    const celular = await this.celularesService.update(id, dto);
+  @UseInterceptors(
+    FileInterceptor('imagen', {
+      storage: memoryStorage(),
+      fileFilter: (_req, file, cb) => {
+        if (!file.mimetype?.startsWith('image/')) {
+          return cb(
+            new BadRequestException('Formato de imagen no permitido'),
+            false,
+          );
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: MAX_IMAGE_SIZE_BYTES },
+    }),
+  )
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateCelularDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    const celular = await this.celularesService.updateWithImage(id, dto, file);
     if (!celular) throw new NotFoundException('Celular not found');
     return new SuccessResponseDto('Celular updated successfully', celular);
   }
@@ -80,15 +123,21 @@ export class CelularesController {
     FileInterceptor('imagen', {
       storage: memoryStorage(),
       fileFilter: (_req, file, cb) => {
-        if (!ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
-          return cb(new BadRequestException('Formato de imagen no permitido'), false);
+        if (!file.mimetype?.startsWith('image/')) {
+          return cb(
+            new BadRequestException('Formato de imagen no permitido'),
+            false,
+          );
         }
         cb(null, true);
       },
       limits: { fileSize: MAX_IMAGE_SIZE_BYTES },
     }),
   )
-  async uploadImage(@Param('id') id: string, @UploadedFile() file?: Express.Multer.File) {
+  async uploadImage(
+    @Param('id') id: string,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
     if (!file) throw new BadRequestException('Imagen requerida');
 
     const celular = await this.celularesService.updateImage(id, file);

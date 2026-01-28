@@ -99,6 +99,30 @@ export class CelularesService {
     }
   }
 
+  async updateWithImage(
+    id: string,
+    dto: UpdateCelularDto,
+    file?: Express.Multer.File,
+  ): Promise<Celular | null> {
+    try {
+      const celular = await this.findOne(id);
+      if (!celular) return null;
+
+      Object.assign(celular, dto);
+
+      if (file) {
+        celular.imagen_data = file.buffer;
+        celular.imagen_mime = file.mimetype;
+        celular.imagen_url = `/celulares/${id}/imagen`;
+      }
+
+      return await this.celularRepository.save(celular);
+    } catch (err) {
+      console.error('Error updating celular with image:', err);
+      return null;
+    }
+  }
+
   async updateImage(id: string, file: Express.Multer.File): Promise<Celular | null> {
     try {
       const celular = await this.findOne(id);
